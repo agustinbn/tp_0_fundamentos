@@ -10,12 +10,9 @@ const char BURNS = 'B';
 const char SI = 'S';
 const char NO = 'N';
 
-int sumar_puntajes(int *puntajes) {
-  int suma = 0;
-  for (int i = 0; i < 4; i++) {
-    suma = suma + puntajes[i];
-  }
-  return suma;
+bool es_fundador_valido(char respuesta) {
+  return respuesta == JEBEDIAH || respuesta == ALIEN || respuesta == MAGIOS ||
+         respuesta == BURNS;
 }
 
 void preguntar_fundador(int *puntaje) {
@@ -38,8 +35,7 @@ void preguntar_fundador(int *puntaje) {
       printf("Correcto! Jebediah Springfield es el fundador.\n");
       puntos = puntos + 100;
       es_correcta = true;
-    } else if (respuesta == ALIEN || respuesta == MAGIOS ||
-               respuesta == BURNS) {
+    } else if (es_fundador_valido(respuesta)) {
       printf("Incorrecto. Intenta de nuevo.\n");
       puntos = puntos - 20;
       intentos++;
@@ -83,9 +79,7 @@ void preguntar_promesa_secreto(int *puntaje) {
   }
 }
 
-bool es_fecha_valida(char *fecha) {
-  return true;
-}
+bool es_fecha_valida(char *fecha) { return true; }
 
 void preguntar_fecha_nacimiento(int *puntaje) {
   char *fecha = "";
@@ -101,7 +95,7 @@ void preguntar_fecha_nacimiento(int *puntaje) {
 void preguntar_sacrificio_donas(int *puntaje) {
   int respuesta = -1;
   int puntos = 0;
-  
+
   printf("¿Cuántas donas estaría dispuesto a sacrificar para el Número Uno?\n");
 
   while (respuesta < 0 || respuesta > 12) {
@@ -128,13 +122,17 @@ void preguntar_sacrificio_donas(int *puntaje) {
   *puntaje = puntos;
 }
 
-void calcular_puntaje_total(int *puntajes) {
-  int puntaje_total = 0;
+int puntaje_total(int *puntajes) {
+  int puntaje = 0;
 
   for (int i = 0; i < 4; i++) {
-    puntaje_total += puntajes[i];
+    puntaje += puntajes[i];
   }
-  
+
+  return puntaje;
+}
+
+void dar_resultado(int puntaje_total) {
   printf("Puntaje total: %d\n", puntaje_total);
 
   if (puntaje_total < 0) {
@@ -156,6 +154,7 @@ int main() {
   preguntar_promesa_secreto(&puntajes[1]);
   preguntar_fecha_nacimiento(&puntajes[2]);
   preguntar_sacrificio_donas(&puntajes[3]);
-  calcular_puntaje_total(puntajes);
+  int puntaje = puntaje_total(puntajes);
+  dar_resultado(puntaje);
   return 0;
 }
