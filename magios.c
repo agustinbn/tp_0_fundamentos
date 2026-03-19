@@ -1,18 +1,12 @@
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 const char JEBEDIAH = 'J';
-const char *JEBEDIAH_NAME = "Jebediah Springfield";
-
 const char ALIEN = 'A';
-const char *ALIEN_NAME = "Los Aliens";
-
 const char MAGIOS = 'S';
-const char *MAGIOS_NAME = "Los Magios";
-
 const char BURNS = 'B';
-const char *BURNS_NAME = "Sr. Burns";
-
 const char SI = 'S';
 const char NO = 'N';
 
@@ -24,8 +18,6 @@ int sumar_puntajes(int *puntajes) {
   return suma;
 }
 
-// PREGUNTA 1
-
 void preguntar_fundador(int *puntaje) {
   char respuesta = '-';
   bool es_correcta = false;
@@ -33,17 +25,17 @@ void preguntar_fundador(int *puntaje) {
   int puntos = 0;
 
   printf("¿Quién fundó realmente Springfield?\n");
-  printf("[%c] %s\n", JEBEDIAH, JEBEDIAH_NAME);
-  printf("[%c] %s\n", ALIEN, ALIEN_NAME);
-  printf("[%c] %s\n", MAGIOS, MAGIOS_NAME);
-  printf("[%c] %s\n", BURNS, BURNS_NAME);
+  printf("[%c] Jebediah Springfield\n", JEBEDIAH);
+  printf("[%c] Los Aliens\n", ALIEN);
+  printf("[%c] Los Magios\n", MAGIOS);
+  printf("[%c] Sr. Burns\n", BURNS);
 
   while (intentos < 3 && !es_correcta) {
     printf("Ingrese su respuesta: ");
     scanf(" %c", &respuesta);
 
     if (respuesta == JEBEDIAH) {
-      printf("Correcto! %s es el fundador.\n", JEBEDIAH_NAME);
+      printf("Correcto! Jebediah Springfield es el fundador.\n");
       puntos = puntos + 100;
       es_correcta = true;
     } else if (respuesta == ALIEN || respuesta == MAGIOS ||
@@ -64,29 +56,22 @@ void preguntar_fundador(int *puntaje) {
   *puntaje = puntos;
 }
 
-// PREGUNTA 2
-
 void preguntar_promesa_secreto(int *puntaje) {
   char ingreso = '-';
   bool promete = false;
 
   printf("¿Promete mantener en secreto la existencia de los Magios?\n");
-  printf("[S] Si\n");
-  printf("[N] No\n");
+  printf("[%c] Sí\n", SI);
+  printf("[%c] No\n", NO);
 
   while (ingreso != SI && ingreso != NO) {
     printf("Ingrese su respuesta: ");
     scanf(" %c", &ingreso);
 
     if (ingreso == SI) {
-      printf("Correcto! %s promete mantener en secreto la existencia de los "
-             "Magios.\n",
-             MAGIOS_NAME);
       *puntaje = 50;
       promete = true;
     } else if (ingreso == NO) {
-      printf("Revelar el secreto de los Magios implica prácticamente la "
-             "eliminación del aspirante.\n");
       *puntaje = -300;
     } else {
       printf("Respuesta inválida. Por favor, ingrese una opción válida.\n");
@@ -98,24 +83,25 @@ void preguntar_promesa_secreto(int *puntaje) {
   }
 }
 
-void preguntar_edad(int *puntaje) {
-  int edad = 0;
+bool es_fecha_valida(char *fecha) {
+  return true;
+}
 
-  while (edad <= 0) {
-    printf("Ingrese su edad: ");
-    scanf("%i", &edad);
+void preguntar_fecha_nacimiento(int *puntaje) {
+  char *fecha = "";
 
-    if (edad <= 0) {
-      printf("Respuesta inválida. Por favor, ingrese una edad válida.\n");
-    }
+  while (!es_fecha_valida(fecha)) {
+    printf("Ingrese su fecha de nacimiento (yyyy/mm): ");
+    scanf("%s", fecha);
   }
 
-  *puntaje = (edad * 2);
+  *puntaje = 0;
 }
 
 void preguntar_sacrificio_donas(int *puntaje) {
   int respuesta = -1;
-
+  int puntos = 0;
+  
   printf("¿Cuántas donas estaría dispuesto a sacrificar para el Número Uno?\n");
 
   while (respuesta < 0 || respuesta > 12) {
@@ -128,15 +114,39 @@ void preguntar_sacrificio_donas(int *puntaje) {
   }
 
   if (respuesta == 0) {
-    *puntaje = -100;
+    puntos = -100;
   } else if (respuesta >= 1 && respuesta <= 3) {
-    *puntaje = 10;
+    puntos = 10;
   } else if (respuesta >= 4 && respuesta <= 6) {
-    *puntaje = 40;
+    puntos = 40;
   } else if (respuesta >= 7 && respuesta <= 9) {
-    *puntaje = 70;
+    puntos = 70;
   } else if (respuesta >= 10 && respuesta <= 12) {
-    *puntaje = 120;
+    puntos = 120;
+  }
+
+  *puntaje = puntos;
+}
+
+void calcular_puntaje_total(int *puntajes) {
+  int puntaje_total = 0;
+
+  for (int i = 0; i < 4; i++) {
+    puntaje_total += puntajes[i];
+  }
+  
+  printf("Puntaje total: %d\n", puntaje_total);
+
+  if (puntaje_total < 0) {
+    printf("-RECHAZADO-\n");
+  } else if (puntaje_total <= 150) {
+    printf("-ASPIRANTE-\n");
+  } else if (puntaje_total <= 250) {
+    printf("-MAGIO NOVATO-\n");
+  } else if (puntaje_total <= 349) {
+    printf("-MAGIO-\n");
+  } else {
+    printf("-LIDER SUPREMO-\n");
   }
 }
 
@@ -144,12 +154,8 @@ int main() {
   int puntajes[4];
   preguntar_fundador(&puntajes[0]);
   preguntar_promesa_secreto(&puntajes[1]);
-  preguntar_edad(&puntajes[2]); 
+  preguntar_fecha_nacimiento(&puntajes[2]);
   preguntar_sacrificio_donas(&puntajes[3]);
-  printf("Puntaje 1: %d\n", puntajes[0]);
-  printf("Puntaje 2: %d\n", puntajes[1]);
-  printf("Puntaje 3: %d\n", puntajes[2]);
-  printf("Puntaje 4: %d\n", puntajes[3]);
-  printf("Puntaje total: %d\n", sumar_puntajes(puntajes));
+  calcular_puntaje_total(puntajes);
   return 0;
 }
