@@ -15,7 +15,7 @@ bool es_fundador_valido(char respuesta) {
          respuesta == BURNS;
 }
 
-void preguntar_fundador(int *puntaje) {
+void preguntar_fundador(int *puntaje, bool *terminar_programa) {
   char respuesta = '-';
   bool es_correcta = false;
   int intentos = 0;
@@ -47,6 +47,7 @@ void preguntar_fundador(int *puntaje) {
 
   if (intentos == 3 && !es_correcta) {
     printf("-RECHAZADO-\n");
+    *terminar_programa = true;
   }
 
   *puntaje = puntos;
@@ -122,7 +123,7 @@ void preguntar_sacrificio_donas(int *puntaje) {
   *puntaje = puntos;
 }
 
-int calcular_puntaje_total(int *puntajes) {
+int calcular_puntaje_total(int puntajes[4]) {
   int puntaje = 0;
 
   for (int i = 0; i < 4; i++) {
@@ -149,12 +150,13 @@ void dar_resultado(int puntaje_total) {
 }
 
 int main() {
-  int puntajes[4];
-  preguntar_fundador(&puntajes[0]);
+  int puntajes[4] = {0, 0, 0, 0};
+  bool terminar_programa = false;
+  preguntar_fundador(&puntajes[0], &terminar_programa);
+  if (terminar_programa) return 0;
   preguntar_promesa_secreto(&puntajes[1]);
   preguntar_fecha_nacimiento(&puntajes[2]);
   preguntar_sacrificio_donas(&puntajes[3]);
   int puntaje_total = calcular_puntaje_total(puntajes);
   dar_resultado(puntaje_total);
-  return 0;
 }
