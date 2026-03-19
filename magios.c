@@ -7,8 +7,26 @@ const char JEBEDIAH = 'J';
 const char ALIEN = 'A';
 const char MAGIOS = 'S';
 const char BURNS = 'B';
+
+const int MAX_INTENTOS = 3;
+const int PUNTOS_CORRECTA_FUNDADOR = 100;
+const int PUNTOS_INCORRECTA_FUNDADOR = 20;
+
 const char SI = 'S';
 const char NO = 'N';
+const int PUNTOS_PROMESA_SECRETA_SI = 50;
+const int PUNTOS_PROMESA_SECRETA_NO = -300;
+
+const int PUNTOS_0_DONAS = -100;
+const int PUNTOS_3_DONAS = 10;
+const int PUNTOS_6_DONAS = 40;
+const int PUNTOS_9_DONAS = 70;
+const int PUNTOS_12_DONAS = 120;
+
+const int PUNTOS_RECHAZADO = 0;
+const int PUNTOS_ASPIRANTE = 150;
+const int PUNTOS_MAGIO_NOVATO = 250;
+const int PUNTOS_MAGIO = 349;
 
 /*
  * Pre: -
@@ -36,25 +54,25 @@ void preguntar_fundador(int *puntaje, bool *terminar_programa) {
   printf("[%c] Los Magios\n", MAGIOS);
   printf("[%c] Sr. Burns\n", BURNS);
 
-  while (intentos < 3 && !es_correcta) {
+  while (intentos < MAX_INTENTOS && !es_correcta) {
     printf("Ingrese su respuesta: ");
     scanf(" %c", &respuesta);
 
     if (respuesta == JEBEDIAH) {
       printf("Correcto! Jebediah Springfield es el fundador.\n");
-      puntos = puntos + 100;
+      puntos += PUNTOS_CORRECTA_FUNDADOR;
       es_correcta = true;
     } else if (es_fundador_valido(respuesta)) {
       printf("Incorrecto. Intenta de nuevo.\n");
-      puntos = puntos - 20;
+      puntos -= PUNTOS_INCORRECTA_FUNDADOR;
       intentos++;
-      printf("Intentos restantes: %d\n", 3 - intentos);
+      printf("Intentos restantes: %d\n", MAX_INTENTOS - intentos);
     } else {
       printf("Respuesta inválida. Por favor, ingrese una opción válida.\n");
     }
   }
 
-  if (intentos == 3 && !es_correcta) {
+  if (intentos == MAX_INTENTOS && !es_correcta) {
     printf("-RECHAZADO-\n");
     *terminar_programa = true;
   }
@@ -79,10 +97,10 @@ void preguntar_promesa_secreto(int *puntaje) {
     scanf(" %c", &ingreso);
 
     if (ingreso == SI) {
-      *puntaje = 50;
+      *puntaje = PUNTOS_PROMESA_SECRETA_SI;
       promete = true;
     } else if (ingreso == NO) {
-      *puntaje = -300;
+      *puntaje = PUNTOS_PROMESA_SECRETA_NO;
     } else {
       printf("Respuesta inválida. Por favor, ingrese una opción válida.\n");
     }
@@ -134,15 +152,15 @@ void preguntar_sacrificio_donas(int *puntaje) {
   }
 
   if (respuesta == 0) {
-    puntos = -100;
+    puntos = PUNTOS_0_DONAS;
   } else if (respuesta <= 3) {
-    puntos = 10;
+    puntos = PUNTOS_3_DONAS;
   } else if (respuesta <= 6) {
-    puntos = 40;
+    puntos = PUNTOS_6_DONAS;
   } else if (respuesta <= 9) {
-    puntos = 70;
+    puntos = PUNTOS_9_DONAS;
   } else if (respuesta <= 12) {
-    puntos = 120;
+    puntos = PUNTOS_12_DONAS;
   }
 
   *puntaje = puntos;
@@ -167,13 +185,13 @@ int calcular_puntaje_total(int puntajes[4]) {
  * Pos: imprime el estado segun la cantidad de puntos obtenida.
  */
 void dar_resultado(int puntaje_total) {
-  if (puntaje_total < 0) {
+  if (puntaje_total < PUNTOS_RECHAZADO) {
     printf("Con las repuestas brindadas, tu estado es: -RECHAZADO-\n");
-  } else if (puntaje_total <= 150) {
+  } else if (puntaje_total <= PUNTOS_ASPIRANTE) {
     printf("Con las repuestas brindadas, tu estado es: -ASPIRANTE-\n");
-  } else if (puntaje_total <= 250) {
+  } else if (puntaje_total <= PUNTOS_MAGIO_NOVATO) {
     printf("Con las repuestas brindadas, tu estado es: -MAGIO NOVATO-\n");
-  } else if (puntaje_total <= 349) {
+  } else if (puntaje_total <= PUNTOS_MAGIO) {
     printf("Con las repuestas brindadas, tu estado es: -MAGIO-\n");
   } else {
     printf("Con las repuestas brindadas, tu estado es: -LIDER SUPREMO-\n");
