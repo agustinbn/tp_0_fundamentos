@@ -10,11 +10,20 @@ const char BURNS = 'B';
 const char SI = 'S';
 const char NO = 'N';
 
+/*
+ * Pre: -
+ * Pos: devuelve true si respuesta es una de las opciones válidas (J, A, S o B).
+ */
 bool es_fundador_valido(char respuesta) {
   return respuesta == JEBEDIAH || respuesta == ALIEN || respuesta == MAGIOS ||
          respuesta == BURNS;
 }
 
+/*
+ * Pre: -.
+ * Pos: agrega o quita puntos segun la respuesta. Si se agotan 3
+ *      intentos sin acertar, imprime -RECHAZADO- y termina el programa.
+ */
 void preguntar_fundador(int *puntaje, bool *terminar_programa) {
   char respuesta = '-';
   bool es_correcta = false;
@@ -53,6 +62,10 @@ void preguntar_fundador(int *puntaje, bool *terminar_programa) {
   *puntaje = puntos;
 }
 
+/*
+ * Pre: -.
+ * Pos: agrega o quita puntos segun la respuesta. Si la respuesta fue N, imprime -RECHAZADO-.
+ */
 void preguntar_promesa_secreto(int *puntaje) {
   char ingreso = '-';
   bool promete = false;
@@ -80,8 +93,16 @@ void preguntar_promesa_secreto(int *puntaje) {
   }
 }
 
+/*
+ * Pre: -
+ * Pos: siempre devuelve true.
+ */
 bool es_fecha_valida(char *fecha) { return true; }
 
+/*
+ * Pre: -.
+ * Pos: -.
+ */
 void preguntar_fecha_nacimiento(int *puntaje) {
   char *fecha = "";
 
@@ -93,6 +114,10 @@ void preguntar_fecha_nacimiento(int *puntaje) {
   *puntaje = 0;
 }
 
+/*
+ * Pre: -
+ * Pos: agrega una cantidad de puntos especifica segun la cantidad de donas que ingrese el usuario.
+ */
 void preguntar_sacrificio_donas(int *puntaje) {
   int respuesta = -1;
   int puntos = 0;
@@ -110,19 +135,23 @@ void preguntar_sacrificio_donas(int *puntaje) {
 
   if (respuesta == 0) {
     puntos = -100;
-  } else if (respuesta >= 1 && respuesta <= 3) {
+  } else if (respuesta <= 3) {
     puntos = 10;
-  } else if (respuesta >= 4 && respuesta <= 6) {
+  } else if (respuesta <= 6) {
     puntos = 40;
-  } else if (respuesta >= 7 && respuesta <= 9) {
+  } else if (respuesta <= 9) {
     puntos = 70;
-  } else if (respuesta >= 10 && respuesta <= 12) {
+  } else if (respuesta <= 12) {
     puntos = 120;
   }
 
   *puntaje = puntos;
 }
 
+/*
+ * Pre: la variable puntajes tiene 4 elementos.
+ * Pos: devuelve la suma de los 4 items de la variable puntajes.
+ */
 int calcular_puntaje_total(int puntajes[4]) {
   int puntaje = 0;
 
@@ -133,9 +162,11 @@ int calcular_puntaje_total(int puntajes[4]) {
   return puntaje;
 }
 
+/*
+ * Pre: -
+ * Pos: imprime el estado segun la cantidad de puntos obtenida.
+ */
 void dar_resultado(int puntaje_total) {
-  printf("Puntaje total: %d\n", puntaje_total);
-
   if (puntaje_total < 0) {
     printf("Con las repuestas brindadas, tu estado es: -RECHAZADO-\n");
   } else if (puntaje_total <= 150) {
