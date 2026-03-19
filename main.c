@@ -16,6 +16,14 @@ const char *BURNS_NAME = "Sr. Burns";
 const char SI = 'S';
 const char NO = 'N';
 
+int sumar_puntajes(int *puntajes) {
+  int suma = 0;
+  for (int i = 0; i < 4; i++) {
+    suma = suma + puntajes[i];
+  }
+  return suma;
+}
+
 // PREGUNTA 1
 
 void preguntar_fundador(int *puntaje) {
@@ -102,13 +110,43 @@ void preguntar_edad(int *puntaje) {
   *puntaje = (edad * 2);
 }
 
+void preguntar_sacrificio_donas(int *puntaje) {
+  int respuesta = -1;
+
+  printf("¿Cuantas donas sacrificarias para el numero uno?\n");
+
+  while (respuesta < 0) {
+    printf("Ingrese su respuesta: ");
+    scanf("%i", &respuesta);
+
+    if (respuesta < 0) {
+      printf("Respuesta inválida. Por favor, ingrese un número válido.\n");
+    }
+  }
+
+  if (respuesta == 0) {
+    *puntaje = -100;
+  } else if (respuesta >= 1 && respuesta <= 3) {
+    *puntaje = 10;
+  } else if (respuesta >= 4 && respuesta <= 6) {
+    *puntaje = 40;
+  } else if (respuesta >= 7 && respuesta <= 9) {
+    *puntaje = 70;
+  } else if (respuesta >= 10 && respuesta <= 12) {
+    *puntaje = 120;
+  }
+}
+
 int main() {
   int puntajes[4];
   preguntar_fundador(&puntajes[0]);
   preguntar_promesa_secreto(&puntajes[1]);
   preguntar_edad(&puntajes[2]);
+  preguntar_sacrificio_donas(&puntajes[3]);
   printf("Puntaje 1: %d\n", puntajes[0]);
   printf("Puntaje 2: %d\n", puntajes[1]);
   printf("Puntaje 3: %d\n", puntajes[2]);
+  printf("Puntaje 4: %d\n", puntajes[3]);
+  printf("Puntaje total: %d\n", sumar_puntajes(puntajes));
   return 0;
 }
