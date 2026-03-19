@@ -16,17 +16,9 @@ const char *BURNS_NAME = "Sr. Burns";
 const char SI = 'S';
 const char NO = 'N';
 
-int puntos = 0;
-
-// UTILS
-
-void agregar_puntos(int cantidad) { puntos += cantidad; }
-
-void quitar_puntos(int cantidad) { puntos -= cantidad; }
-
 // PREGUNTA 1
 
-void pregunta_fundador() {
+void preguntar_fundador(int *puntaje) {
   char respuesta = '-';
   bool es_correcta = false;
   int intentos = 0;
@@ -43,12 +35,12 @@ void pregunta_fundador() {
 
     if (respuesta == JEBEDIAH) {
       printf("Correcto! %s es el fundador.\n", JEBEDIAH_NAME);
-      agregar_puntos(100);
+      *puntaje = *puntaje + 100;
       es_correcta = true;
     } else if (respuesta == ALIEN || respuesta == MAGIOS ||
                respuesta == BURNS) {
       printf("Incorrecto. Intenta de nuevo.\n");
-      quitar_puntos(20);
+      *puntaje = *puntaje - 20;
       intentos++;
       printf("Intentos restantes: %d\n", 3 - intentos);
     } else {
@@ -63,33 +55,60 @@ void pregunta_fundador() {
 
 // PREGUNTA 2
 
-void pregunta_promesa_secreto() {
-  char respuesta = '-';
+void preguntar_promesa_secreto(int *puntaje) {
+  char ingreso = '-';
+  bool respuesta = false;
 
   printf("¿Promete mantener en secreto la existencia de los Magios?\n");
   printf("[S] Si\n");
   printf("[N] No\n");
 
-  while (!respuesta) {
+  while (ingreso != SI && ingreso != NO) {
     printf("Ingrese su respuesta: ");
-    scanf(" %c", &respuesta);
+    scanf(" %c", &ingreso);
 
-    if (respuesta == SI) {
-      printf("Correcto! %s promete mantener en secreto la existencia de los Magios.\n", MAGIOS_NAME);
-      agregar_puntos(50);
+    if (ingreso == SI) {
+      printf("Correcto! %s promete mantener en secreto la existencia de los "
+             "Magios.\n",
+             MAGIOS_NAME);
+      *puntaje = 50;
       respuesta = true;
-    } else if (respuesta == NO) {
-      printf("Incorrecto. Intenta de nuevo.\n");
-      quitar_puntos(300);
+    } else if (ingreso == NO) {
+      printf("Revelar el secreto de los Magios implica prácticamente la "
+             "eliminación del aspirante.\n");
+      *puntaje = -300;
     } else {
       printf("Respuesta inválida. Por favor, ingrese una opción válida.\n");
     }
   }
-  
+
+  if (ingreso == NO) {
+    printf("-RECHAZADO-\n");
+  }
+}
+
+void preguntar_edad(int *puntaje) {
+  int edad = 0;
+
+  while (edad <= 0) {
+    printf("Ingrese su edad: ");
+    scanf("%i", &edad);
+
+    if (edad <= 0) {
+      printf("Respuesta inválida. Por favor, ingrese una edad válida.\n");
+    }
+  }
+
+  *puntaje = (edad * 2);
 }
 
 int main() {
-  pregunta_fundador();
-  pregunta_promesa_secreto();
+  int puntajes[4];
+  preguntar_fundador(&puntajes[0]);
+  preguntar_promesa_secreto(&puntajes[1]);
+  preguntar_edad(&puntajes[2]);
+  printf("Puntaje 1: %d\n", puntajes[0]);
+  printf("Puntaje 2: %d\n", puntajes[1]);
+  printf("Puntaje 3: %d\n", puntajes[2]);
   return 0;
 }
