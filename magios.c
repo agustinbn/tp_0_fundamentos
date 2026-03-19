@@ -138,15 +138,15 @@ void calcular_puntaje_total(int *puntajes) {
   printf("Puntaje total: %d\n", puntaje_total);
 
   if (puntaje_total < 0) {
-    printf("-RECHAZADO-\n");
+    printf("Con las repuestas brindadas, tu estado es: -RECHAZADO-\n");
   } else if (puntaje_total <= 150) {
-    printf("-ASPIRANTE-\n");
+    printf("Con las repuestas brindadas, tu estado es: -ASPIRANTE-\n");
   } else if (puntaje_total <= 250) {
-    printf("-MAGIO NOVATO-\n");
+    printf("Con las repuestas brindadas, tu estado es: -MAGIO NOVATO-\n");
   } else if (puntaje_total <= 349) {
-    printf("-MAGIO-\n");
+    printf("Con las repuestas brindadas, tu estado es: -MAGIO-\n");
   } else {
-    printf("-LIDER SUPREMO-\n");
+    printf("Con las repuestas brindadas, tu estado es: -LIDER SUPREMO-\n");
   }
 }
 
