@@ -30,6 +30,7 @@ void preguntar_fundador(int *puntaje) {
   char respuesta = '-';
   bool es_correcta = false;
   int intentos = 0;
+  int puntos = 0;
 
   printf("¿Quién fundó realmente Springfield?\n");
   printf("[%c] %s\n", JEBEDIAH, JEBEDIAH_NAME);
@@ -43,12 +44,12 @@ void preguntar_fundador(int *puntaje) {
 
     if (respuesta == JEBEDIAH) {
       printf("Correcto! %s es el fundador.\n", JEBEDIAH_NAME);
-      *puntaje = *puntaje + 100;
+      puntos = puntos + 100;
       es_correcta = true;
     } else if (respuesta == ALIEN || respuesta == MAGIOS ||
                respuesta == BURNS) {
       printf("Incorrecto. Intenta de nuevo.\n");
-      *puntaje = *puntaje - 20;
+      puntos = puntos - 20;
       intentos++;
       printf("Intentos restantes: %d\n", 3 - intentos);
     } else {
@@ -59,13 +60,15 @@ void preguntar_fundador(int *puntaje) {
   if (intentos == 3 && !es_correcta) {
     printf("-RECHAZADO-\n");
   }
+
+  *puntaje = puntos;
 }
 
 // PREGUNTA 2
 
 void preguntar_promesa_secreto(int *puntaje) {
   char ingreso = '-';
-  bool respuesta = false;
+  bool promete = false;
 
   printf("¿Promete mantener en secreto la existencia de los Magios?\n");
   printf("[S] Si\n");
@@ -80,7 +83,7 @@ void preguntar_promesa_secreto(int *puntaje) {
              "Magios.\n",
              MAGIOS_NAME);
       *puntaje = 50;
-      respuesta = true;
+      promete = true;
     } else if (ingreso == NO) {
       printf("Revelar el secreto de los Magios implica prácticamente la "
              "eliminación del aspirante.\n");
@@ -90,7 +93,7 @@ void preguntar_promesa_secreto(int *puntaje) {
     }
   }
 
-  if (ingreso == NO) {
+  if (!promete) {
     printf("-RECHAZADO-\n");
   }
 }
@@ -141,7 +144,7 @@ int main() {
   int puntajes[4];
   preguntar_fundador(&puntajes[0]);
   preguntar_promesa_secreto(&puntajes[1]);
-  preguntar_edad(&puntajes[2]);
+  preguntar_edad(&puntajes[2]); 
   preguntar_sacrificio_donas(&puntajes[3]);
   printf("Puntaje 1: %d\n", puntajes[0]);
   printf("Puntaje 2: %d\n", puntajes[1]);
