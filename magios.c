@@ -122,7 +122,7 @@ void preguntar_sacrificio_donas(int *puntaje) {
   *puntaje = puntos;
 }
 
-int puntaje_total(int *puntajes) {
+int calcular_puntaje_total(int *puntajes) {
   int puntaje = 0;
 
   for (int i = 0; i < 4; i++) {
@@ -154,7 +154,7 @@ int main() {
   preguntar_promesa_secreto(&puntajes[1]);
   preguntar_fecha_nacimiento(&puntajes[2]);
   preguntar_sacrificio_donas(&puntajes[3]);
-  int puntaje = puntaje_total(puntajes);
-  dar_resultado(puntaje);
+  int puntaje_total = calcular_puntaje_total(puntajes);
+  dar_resultado(puntaje_total);
   return 0;
 }
