@@ -116,9 +116,9 @@ void preguntar_edad(int *puntaje) {
 void preguntar_sacrificio_donas(int *puntaje) {
   int respuesta = -1;
 
-  printf("¿Cuantas donas sacrificarias para el numero uno?\n");
+  printf("¿Cuántas donas estaría dispuesto a sacrificar para el Número Uno?\n");
 
-  while (respuesta < 0) {
+  while (respuesta < 0 || respuesta > 12) {
     printf("Ingrese su respuesta: ");
     scanf("%i", &respuesta);
 
