@@ -30,8 +30,6 @@ const int PUNTOS_MAGIO = 349;
 
 const int ANIO_MINIMO = 1926;
 const int ANIO_ACTUAL = 2026;
-const int MES_MINIMO = 1;
-const int MES_MAXIMO = 12;
 const int MES_ACTUAL = 3;
 
 /*
@@ -74,7 +72,9 @@ void preguntar_fundador(int *puntaje, bool *terminar_programa) {
       intentos++;
       printf("Intentos restantes: %d\n", MAX_INTENTOS - intentos);
     } else {
-      printf("Respuesta inválida. Por favor, ingrese una opción válida.\n");
+      printf("Respuesta inválida. Por favor, ingrese una opción válida (%c, "
+             "%c, %c o %c).\n",
+             JEBEDIAH, ALIEN, MAGIOS, BURNS);
     }
   }
 
@@ -107,7 +107,9 @@ void preguntar_promesa_secreto(int *puntaje) {
     } else if (ingreso == NO) {
       *puntaje = PUNTOS_PROMESA_SECRETA_NO;
     } else {
-      printf("Respuesta inválida. Por favor, ingrese una opción válida (%c o %c).\n", SI, NO);
+      printf("Respuesta inválida. Por favor, ingrese una opción válida (%c o "
+             "%c).\n",
+             SI, NO);
     }
   }
 }
@@ -129,6 +131,10 @@ bool es_fecha_valida(char *fecha) {
   int mes = 0;
 
   if (sscanf(fecha, "%4d/%2d", &anio, &mes) != 2) {
+    return false;
+  }
+
+  if (anio <= 0 || mes <= 0) {
     return false;
   }
 
@@ -157,7 +163,15 @@ void preguntar_fecha_nacimiento(int *puntaje) {
     scanf("%7s", fecha);
 
     if (!es_fecha_valida(fecha)) {
-      printf("Respuesta inválida. Por favor, ingrese una fecha válida (yyyy/mm).\n");
+      printf(
+          "Fecha inválida. Por favor, ingrese una fecha en formato válido:\n");
+      printf(
+          "- El año debe tener exactamente 4 dígitos (por ejemplo, 1999).\n");
+      printf("- El mes debe tener exactamente 2 dígitos entre 01 y 12.\n");
+      printf("- Ambos números deben ser positivos.\n");
+      printf(
+          "- El formato debe ser estrictamente yyyy/mm (ejemplo: 2005/11).\n");
+      printf("- No puede ser anterior a 1926/03 ni posterior a 2026/03.\n");
     }
   }
 
@@ -165,7 +179,14 @@ void preguntar_fecha_nacimiento(int *puntaje) {
   int mes = 0;
   sscanf(fecha, "%4d/%2d", &anio, &mes);
 
-  *puntaje = (ANIO_ACTUAL - anio) * 2;
+  int edad = ANIO_ACTUAL - anio;
+  int meses_restantes = MES_ACTUAL - mes;
+
+  if (meses_restantes < 0) {
+    edad--;
+  }
+
+  *puntaje = edad * 2;
 }
 
 /*
@@ -184,7 +205,8 @@ void preguntar_sacrificio_donas(int *puntaje) {
     scanf("%i", &respuesta);
 
     if (respuesta < 0 || respuesta > 12) {
-      printf("Respuesta inválida. Por favor, ingrese un número válido (0-12).\n");
+      printf(
+          "Respuesta inválida. Por favor, ingrese un número válido (0-12).\n");
     }
   }
 
@@ -221,7 +243,12 @@ int calcular_puntaje_total(int puntajes[4]) {
  * Pre: -
  * Pos: imprime el estado segun la cantidad de puntos obtenida.
  */
-void dar_resultado(int puntaje_total) {
+void dar_resultado(int puntajes[4]) {
+  int puntaje_total = calcular_puntaje_total(puntajes);
+
+  printf("Puntajes: %d, %d, %d, %d\n", puntajes[0], puntajes[1], puntajes[2], puntajes[3]);
+  printf("Puntaje total: %d\n", puntaje_total);
+
   if (puntaje_total < PUNTOS_RECHAZADO) {
     printf("Con las repuestas brindadas, tu estado es: -RECHAZADO-\n");
   } else if (puntaje_total <= PUNTOS_ASPIRANTE) {
@@ -245,7 +272,6 @@ int main() {
   preguntar_promesa_secreto(&puntajes[1]);
   preguntar_fecha_nacimiento(&puntajes[2]);
   preguntar_sacrificio_donas(&puntajes[3]);
-  int puntaje_total = calcular_puntaje_total(puntajes);
-  dar_resultado(puntaje_total);
+  dar_resultado(puntajes);
   return 0;
 }
