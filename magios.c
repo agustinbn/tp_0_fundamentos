@@ -82,11 +82,11 @@ void preguntar_fundador(int *puntaje, bool *terminar_programa) {
 
 /*
  * Pre: -.
- * Pos: agrega o quita puntos segun la respuesta. Si la respuesta fue N, imprime -RECHAZADO-.
+ * Pos: agrega o quita puntos segun la respuesta. Si la respuesta fue N, imprime
+ * -RECHAZADO-.
  */
 void preguntar_promesa_secreto(int *puntaje) {
   char ingreso = '-';
-  bool promete = false;
 
   printf("¿Promete mantener en secreto la existencia de los Magios?\n");
   printf("[%c] Sí\n", SI);
@@ -98,43 +98,70 @@ void preguntar_promesa_secreto(int *puntaje) {
 
     if (ingreso == SI) {
       *puntaje = PUNTOS_PROMESA_SECRETA_SI;
-      promete = true;
     } else if (ingreso == NO) {
       *puntaje = PUNTOS_PROMESA_SECRETA_NO;
     } else {
       printf("Respuesta inválida. Por favor, ingrese una opción válida.\n");
     }
   }
-
-  if (!promete) {
-    printf("-RECHAZADO-\n");
-  }
 }
 
 /*
- * Pre: -
- * Pos: siempre devuelve true.
+ * Pre: la fecha es un string de 7 caracteres.
+ * Pos: devuelve true si la fecha cumple el formato yyyy/mm y es valida.
  */
-bool es_fecha_valida(char *fecha) { return true; }
+bool es_fecha_valida(char *fecha) {
+  if (strlen(fecha) != 7) {
+    return false;
+  }
+
+  if (fecha[4] != '/') {
+    return false;
+  }
+
+  int anio = 0;
+  int mes = 0;
+
+  if (sscanf(fecha, "%4d/%2d", &anio, &mes) != 2) {
+    return false;
+  }
+
+  if (anio < 1926 || (anio == 1926 && mes < 3) || anio > 2026 ||
+      (anio == 2026 && mes > 3)) {
+    return false;
+  }
+
+  if (mes < 1 || mes > 12) {
+    return false;
+  }
+
+  return true;
+}
 
 /*
  * Pre: -.
- * Pos: -.
+ * Pos: agrega una cantidad de puntos especifica segun la fecha de nacimiento
+ * del usuario.
  */
 void preguntar_fecha_nacimiento(int *puntaje) {
-  char *fecha = "";
+  char fecha[8];
 
   while (!es_fecha_valida(fecha)) {
     printf("Ingrese su fecha de nacimiento (yyyy/mm): ");
-    scanf("%s", fecha);
+    scanf("%7s", fecha);
   }
 
-  *puntaje = 0;
+  int anio = 0;
+  int mes = 0;
+  sscanf(fecha, "%4d/%2d", &anio, &mes);
+
+  *puntaje = (2026 - anio) * 2;
 }
 
 /*
  * Pre: -
- * Pos: agrega una cantidad de puntos especifica segun la cantidad de donas que ingrese el usuario.
+ * Pos: agrega una cantidad de puntos especifica segun la cantidad de donas que
+ * ingrese el usuario.
  */
 void preguntar_sacrificio_donas(int *puntaje) {
   int respuesta = -1;
@@ -202,10 +229,14 @@ int main() {
   int puntajes[4] = {0, 0, 0, 0};
   bool terminar_programa = false;
   preguntar_fundador(&puntajes[0], &terminar_programa);
-  if (terminar_programa) return 0;
+  if (terminar_programa)
+    return 0;
   preguntar_promesa_secreto(&puntajes[1]);
   preguntar_fecha_nacimiento(&puntajes[2]);
   preguntar_sacrificio_donas(&puntajes[3]);
   int puntaje_total = calcular_puntaje_total(puntajes);
+  printf("Puntaje total: %d\n", puntaje_total);
+  printf("Puntajes: %d, %d, %d, %d\n", puntajes[0], puntajes[1], puntajes[2],
+         puntajes[3]);
   dar_resultado(puntaje_total);
 }
