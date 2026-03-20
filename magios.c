@@ -29,10 +29,11 @@ const int PUNTOS_MAGIO_NOVATO = 250;
 const int PUNTOS_MAGIO = 349;
 
 const int ANIO_MINIMO = 1926;
-const int ANIO_MAXIMO = 2026;
+const int ANIO_ACTUAL = 2026;
 const int MES_MINIMO = 1;
 const int MES_MAXIMO = 12;
 const int MES_ACTUAL = 3;
+
 /*
  * Pre: -
  * Pos: devuelve true si respuesta es una de las opciones válidas (J, A, S o B).
@@ -106,7 +107,7 @@ void preguntar_promesa_secreto(int *puntaje) {
     } else if (ingreso == NO) {
       *puntaje = PUNTOS_PROMESA_SECRETA_NO;
     } else {
-      printf("Respuesta inválida. Por favor, ingrese una opción válida.\n");
+      printf("Respuesta inválida. Por favor, ingrese una opción válida (%c o %c).\n", SI, NO);
     }
   }
 }
@@ -132,7 +133,7 @@ bool es_fecha_valida(char *fecha) {
   }
 
   if (anio < ANIO_MINIMO || (anio == ANIO_MINIMO && mes < MES_ACTUAL) ||
-      anio > ANIO_MAXIMO || (anio == ANIO_MAXIMO && mes > MES_ACTUAL)) {
+      anio > ANIO_ACTUAL || (anio == ANIO_ACTUAL && mes > MES_ACTUAL)) {
     return false;
   }
 
@@ -154,13 +155,17 @@ void preguntar_fecha_nacimiento(int *puntaje) {
   while (!es_fecha_valida(fecha)) {
     printf("Ingrese su fecha de nacimiento (yyyy/mm): ");
     scanf("%7s", fecha);
+
+    if (!es_fecha_valida(fecha)) {
+      printf("Respuesta inválida. Por favor, ingrese una fecha válida (yyyy/mm).\n");
+    }
   }
 
   int anio = 0;
   int mes = 0;
   sscanf(fecha, "%4d/%2d", &anio, &mes);
 
-  *puntaje = (ANIO_MAXIMO - anio) * 2;
+  *puntaje = (ANIO_ACTUAL - anio) * 2;
 }
 
 /*
@@ -178,8 +183,8 @@ void preguntar_sacrificio_donas(int *puntaje) {
     printf("Ingrese su respuesta: ");
     scanf("%i", &respuesta);
 
-    if (respuesta < 0) {
-      printf("Respuesta inválida. Por favor, ingrese un número válido.\n");
+    if (respuesta < 0 || respuesta > 12) {
+      printf("Respuesta inválida. Por favor, ingrese un número válido (0-12).\n");
     }
   }
 
@@ -234,14 +239,13 @@ int main() {
   int puntajes[4] = {0, 0, 0, 0};
   bool terminar_programa = false;
   preguntar_fundador(&puntajes[0], &terminar_programa);
-  if (terminar_programa)
+  if (terminar_programa) {
     return 0;
+  }
   preguntar_promesa_secreto(&puntajes[1]);
   preguntar_fecha_nacimiento(&puntajes[2]);
   preguntar_sacrificio_donas(&puntajes[3]);
   int puntaje_total = calcular_puntaje_total(puntajes);
-  printf("Puntaje total: %d\n", puntaje_total);
-  printf("Puntajes: %d, %d, %d, %d\n", puntajes[0], puntajes[1], puntajes[2],
-         puntajes[3]);
   dar_resultado(puntaje_total);
+  return 0;
 }
