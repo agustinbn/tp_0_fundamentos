@@ -28,6 +28,11 @@ const int PUNTOS_ASPIRANTE = 150;
 const int PUNTOS_MAGIO_NOVATO = 250;
 const int PUNTOS_MAGIO = 349;
 
+const int ANIO_MINIMO = 1926;
+const int ANIO_MAXIMO = 2026;
+const int MES_MINIMO = 1;
+const int MES_MAXIMO = 12;
+const int MES_ACTUAL = 3;
 /*
  * Pre: -
  * Pos: devuelve true si respuesta es una de las opciones válidas (J, A, S o B).
@@ -126,8 +131,8 @@ bool es_fecha_valida(char *fecha) {
     return false;
   }
 
-  if (anio < 1926 || (anio == 1926 && mes < 3) || anio > 2026 ||
-      (anio == 2026 && mes > 3)) {
+  if (anio < ANIO_MINIMO || (anio == ANIO_MINIMO && mes < MES_ACTUAL) ||
+      anio > ANIO_MAXIMO || (anio == ANIO_MAXIMO && mes > MES_ACTUAL)) {
     return false;
   }
 
@@ -155,7 +160,7 @@ void preguntar_fecha_nacimiento(int *puntaje) {
   int mes = 0;
   sscanf(fecha, "%4d/%2d", &anio, &mes);
 
-  *puntaje = (2026 - anio) * 2;
+  *puntaje = (ANIO_MAXIMO - anio) * 2;
 }
 
 /*
