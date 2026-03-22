@@ -34,7 +34,7 @@ const int MES_ACTUAL = 3;
 
 /*
  * Pre: -
- * Post: devuelve true si respuesta es una de las opciones válidas (J, A, S o B).
+ * Post: devuelve true si respuesta es una de las opciones válidas.
  */
 bool es_fundador_valido(char respuesta) {
   return respuesta == JEBEDIAH || respuesta == ALIEN || respuesta == MAGIOS ||
@@ -150,6 +150,25 @@ bool es_fecha_valida(char *fecha) {
 }
 
 /*
+ * Pre: la fecha es un string de 7 caracteres.
+ * Post: devuelve la edad del usuario segun la fecha de nacimiento.
+ */
+int calcular_edad(char *fecha) {
+  int anio = 0;
+  int mes = 0;
+  sscanf(fecha, "%4d/%2d", &anio, &mes);
+
+  int edad = ANIO_ACTUAL - anio;
+  int meses_restantes = MES_ACTUAL - mes;
+
+  if (meses_restantes < 0) {
+    edad--;
+  }
+
+  return edad;
+}
+
+/*
  * Pre: -.
  * Post: agrega una cantidad de puntos especifica segun la fecha de nacimiento
  * del usuario.
@@ -174,16 +193,7 @@ void preguntar_fecha_nacimiento(int *puntaje) {
     }
   }
 
-  int anio = 0;
-  int mes = 0;
-  sscanf(fecha, "%4d/%2d", &anio, &mes);
-
-  int edad = ANIO_ACTUAL - anio;
-  int meses_restantes = MES_ACTUAL - mes;
-
-  if (meses_restantes < 0) {
-    edad--;
-  }
+  int edad = calcular_edad(fecha);
 
   *puntaje = edad * 2;
 }
