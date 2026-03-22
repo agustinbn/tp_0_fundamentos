@@ -1,4 +1,4 @@
-## Trabajo Práctico Nº 0 - Prueba de Iniciación de los Magios
+# Trabajo Práctico Nº 0 - Prueba de Iniciación de los Magios
 
 Los Magios son una antigua sociedad secreta que opera en las sombras de Springfield. A lo largo de los años han ejercido su influencia sobre distintos aspectos de la ciudad mediante rituales misteriosos, decisiones arbitrarias y una gran cantidad de donas.
 
