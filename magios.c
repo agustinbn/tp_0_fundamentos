@@ -31,6 +31,7 @@ const int PUNTOS_MAGIO = 349;
 const int ANIO_MINIMO = 1926;
 const int ANIO_ACTUAL = 2026;
 const int MES_ACTUAL = 3;
+const int EDAD_MINIMA = 18;
 
 /*
  * Pre: -
@@ -173,8 +174,8 @@ int calcular_edad(char *fecha) {
  * Post: agrega una cantidad de puntos especifica segun la fecha de nacimiento
  * del usuario.
  */
-void preguntar_fecha_nacimiento(int *puntaje) {
-  char fecha[8];
+void preguntar_fecha_nacimiento(int *puntaje, bool *terminar_programa) {
+  char fecha[8] = "";
 
   while (!es_fecha_valida(fecha)) {
     printf("Ingrese su fecha de nacimiento (yyyy/mm): ");
@@ -194,6 +195,12 @@ void preguntar_fecha_nacimiento(int *puntaje) {
   }
 
   int edad = calcular_edad(fecha);
+
+  if (edad < EDAD_MINIMA) {
+    printf("-RECHAZADO-\n");
+    *terminar_programa = true;
+    return;
+  }
 
   *puntaje = edad * 2;
 }
@@ -255,6 +262,10 @@ int calcular_puntaje_total(int puntajes[4]) {
 void dar_resultado(int puntajes[4]) {
   int puntaje_total = calcular_puntaje_total(puntajes);
 
+  printf("Puntajes: %d, %d, %d, %d\n", puntajes[0], puntajes[1], puntajes[2],
+         puntajes[3]);
+  printf("Puntaje total: %d\n", puntaje_total);
+
   if (puntaje_total < PUNTOS_RECHAZADO) {
     printf("Con las repuestas brindadas, tu estado es: -RECHAZADO-\n");
   } else if (puntaje_total <= PUNTOS_ASPIRANTE) {
@@ -276,7 +287,10 @@ int main() {
     return 0;
   }
   preguntar_promesa_secreto(&puntajes[1]);
-  preguntar_fecha_nacimiento(&puntajes[2]);
+  preguntar_fecha_nacimiento(&puntajes[2], &terminar_programa);
+  if (terminar_programa) {
+    return 0;
+  }
   preguntar_sacrificio_donas(&puntajes[3]);
   dar_resultado(puntajes);
   return 0;
