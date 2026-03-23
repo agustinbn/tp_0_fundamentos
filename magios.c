@@ -188,7 +188,7 @@ void preguntar_fecha_nacimiento(int *puntaje, bool *terminar_programa) {
           "Fecha inválida. Por favor, ingrese una fecha en formato válido:\n");
       printf(
           "- El año debe tener exactamente 4 dígitos (por ejemplo, 1999).\n");
-      printf("- El mes debe tener exactamente 2 dígitos entre 01 y 12.\n");
+      printf("- El mes debe tener 1 o 2 dígitos entre 1 y 12.\n");
       printf("- Ambos números deben ser positivos.\n");
       printf("- El formato debe ser yyyy/m o yyyy/mm (ejemplo: 2005/7 o "
              "2005/11).\n");
@@ -265,15 +265,15 @@ void dar_resultado(int puntajes[4]) {
   int puntaje_total = calcular_puntaje_total(puntajes);
 
   if (puntaje_total < PUNTOS_RECHAZADO) {
-    printf("Con las repuestas brindadas, tu estado es: -RECHAZADO-\n");
+    printf("Con las respuestas brindadas, tu estado es: -RECHAZADO-\n");
   } else if (puntaje_total <= PUNTOS_ASPIRANTE) {
-    printf("Con las repuestas brindadas, tu estado es: -ASPIRANTE-\n");
+    printf("Con las respuestas brindadas, tu estado es: -ASPIRANTE-\n");
   } else if (puntaje_total <= PUNTOS_MAGIO_NOVATO) {
-    printf("Con las repuestas brindadas, tu estado es: -MAGIO NOVATO-\n");
+    printf("Con las respuestas brindadas, tu estado es: -MAGIO NOVATO-\n");
   } else if (puntaje_total <= PUNTOS_MAGIO) {
-    printf("Con las repuestas brindadas, tu estado es: -MAGIO-\n");
+    printf("Con las respuestas brindadas, tu estado es: -MAGIO-\n");
   } else {
-    printf("Con las repuestas brindadas, tu estado es: -LIDER SUPREMO-\n");
+    printf("Con las respuestas brindadas, tu estado es: -LIDER SUPREMO-\n");
   }
 }
 

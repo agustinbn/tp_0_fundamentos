@@ -56,5 +56,5 @@ dkms.conf
 
 magios
 *.pdf
-
+*.zip
 test/*
