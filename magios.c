@@ -115,11 +115,12 @@ void preguntar_promesa_secreto(int *puntaje) {
 }
 
 /*
- * Pre: la fecha es un string de 7 caracteres.
- * Post: devuelve true si la fecha cumple el formato yyyy/mm y es valida.
+ * Pre: la fecha es un string.
+ * Post: devuelve true si la fecha cumple el formato yyyy/m o yyyy/mm y es
+ * valida.
  */
 bool es_fecha_valida(char *fecha) {
-  if (strlen(fecha) != 7) {
+  if (strlen(fecha) < 6 || strlen(fecha) > 7) {
     return false;
   }
 
@@ -130,7 +131,8 @@ bool es_fecha_valida(char *fecha) {
   int anio = 0;
   int mes = 0;
 
-  if (sscanf(fecha, "%4d/%2d", &anio, &mes) != 2) {
+  char extra = '\0';
+  if (sscanf(fecha, "%4d/%2d%c", &anio, &mes, &extra) != 2) {
     return false;
   }
 
@@ -178,7 +180,7 @@ void preguntar_fecha_nacimiento(int *puntaje, bool *terminar_programa) {
   char fecha[8] = "";
 
   while (!es_fecha_valida(fecha)) {
-    printf("Ingrese su fecha de nacimiento (yyyy/mm): ");
+    printf("Ingrese su fecha de nacimiento (yyyy/m o yyyy/mm): ");
     scanf("%7s", fecha);
 
     if (!es_fecha_valida(fecha)) {
@@ -188,8 +190,8 @@ void preguntar_fecha_nacimiento(int *puntaje, bool *terminar_programa) {
           "- El año debe tener exactamente 4 dígitos (por ejemplo, 1999).\n");
       printf("- El mes debe tener exactamente 2 dígitos entre 01 y 12.\n");
       printf("- Ambos números deben ser positivos.\n");
-      printf(
-          "- El formato debe ser estrictamente yyyy/mm (ejemplo: 2005/11).\n");
+      printf("- El formato debe ser yyyy/m o yyyy/mm (ejemplo: 2005/7 o "
+             "2005/11).\n");
       printf("- No puede ser anterior a 1926/03 ni posterior a 2026/03.\n");
     }
   }
@@ -261,10 +263,6 @@ int calcular_puntaje_total(int puntajes[4]) {
  */
 void dar_resultado(int puntajes[4]) {
   int puntaje_total = calcular_puntaje_total(puntajes);
-
-  printf("Puntajes: %d, %d, %d, %d\n", puntajes[0], puntajes[1], puntajes[2],
-         puntajes[3]);
-  printf("Puntaje total: %d\n", puntaje_total);
 
   if (puntaje_total < PUNTOS_RECHAZADO) {
     printf("Con las repuestas brindadas, tu estado es: -RECHAZADO-\n");
