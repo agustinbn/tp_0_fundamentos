@@ -58,3 +58,4 @@ magios
 *.pdf
 *.zip
 test/*
+.DS_Store
