@@ -55,7 +55,6 @@ void preguntar_fundador(int *puntaje, bool *terminar_programa) {
   char respuesta = '-';
   bool es_correcta = false;
   int intentos = 0;
-  int puntos = 0;
 
   printf("¿Quién fundó realmente Springfield?\n");
   printf("[%c] Jebediah Springfield\n", JEBEDIAH);
@@ -69,11 +68,9 @@ void preguntar_fundador(int *puntaje, bool *terminar_programa) {
 
     if (respuesta == JEBEDIAH) {
       printf("Correcto! Jebediah Springfield es el fundador.\n");
-      puntos += PUNTOS_CORRECTA_FUNDADOR;
       es_correcta = true;
     } else if (es_fundador_valido(respuesta)) {
       printf("Incorrecto. Intenta de nuevo.\n");
-      puntos -= PUNTOS_INCORRECTA_FUNDADOR;
       intentos++;
       printf("Intentos restantes: %d\n", MAX_INTENTOS - intentos);
     } else {
@@ -88,7 +85,7 @@ void preguntar_fundador(int *puntaje, bool *terminar_programa) {
     *terminar_programa = true;
   }
 
-  *puntaje = puntos;
+  *puntaje = PUNTOS_CORRECTA_FUNDADOR - (PUNTOS_INCORRECTA_FUNDADOR * intentos);
 }
 
 /*
@@ -96,19 +93,19 @@ void preguntar_fundador(int *puntaje, bool *terminar_programa) {
  * Post: agrega o quita puntos segun la respuesta.
  */
 void preguntar_promesa_secreto(int *puntaje) {
-  char ingreso = '-';
+  char respuesta = '-';
 
   printf("¿Promete mantener en secreto la existencia de los Magios?\n");
   printf("[%c] Sí\n", SI);
   printf("[%c] No\n", NO);
 
-  while (ingreso != SI && ingreso != NO) {
+  while (respuesta != SI && respuesta != NO) {
     printf("Ingrese su respuesta: ");
-    scanf(" %c", &ingreso);
+    scanf(" %c", &respuesta);
 
-    if (ingreso == SI) {
+    if (respuesta == SI) {
       *puntaje = PUNTOS_PROMESA_SECRETA_SI;
-    } else if (ingreso == NO) {
+    } else if (respuesta == NO) {
       *puntaje = PUNTOS_PROMESA_SECRETA_NO;
     } else {
       printf("Respuesta inválida. Por favor, ingrese una opción válida (%c o "
@@ -177,6 +174,19 @@ int calcular_edad(char *fecha) {
 
 /*
  * Pre: -.
+ * Post: muestra el formato valido para la fecha de nacimiento.
+ */
+void mostrar_formato_fecha_valido() {
+  printf("- El año debe tener exactamente 4 dígitos (por ejemplo, 1999).\n");
+  printf("- El mes debe tener 1 o 2 dígitos entre 1 y 12.\n");
+  printf("- Ambos números deben ser positivos.\n");
+  printf("- El formato debe ser yyyy/m o yyyy/mm (ejemplo: 2005/7 o "
+         "2005/11).\n");
+  printf("- No puede ser anterior a 1926/03 ni posterior a 2026/03.\n");
+}
+
+/*
+ * Pre: -.
  * Post: agrega una cantidad de puntos especifica segun la fecha de nacimiento
  * del usuario.
  */
@@ -188,15 +198,7 @@ void preguntar_fecha_nacimiento(int *puntaje, bool *terminar_programa) {
     scanf("%7s", fecha);
 
     if (!es_fecha_valida(fecha)) {
-      printf(
-          "Fecha inválida. Por favor, ingrese una fecha en formato válido:\n");
-      printf(
-          "- El año debe tener exactamente 4 dígitos (por ejemplo, 1999).\n");
-      printf("- El mes debe tener 1 o 2 dígitos entre 1 y 12.\n");
-      printf("- Ambos números deben ser positivos.\n");
-      printf("- El formato debe ser yyyy/m o yyyy/mm (ejemplo: 2005/7 o "
-             "2005/11).\n");
-      printf("- No puede ser anterior a 1926/03 ni posterior a 2026/03.\n");
+      mostrar_formato_fecha_valido();
     }
   }
 
@@ -212,39 +214,47 @@ void preguntar_fecha_nacimiento(int *puntaje, bool *terminar_programa) {
 }
 
 /*
+ * Pre: la cantidad de donas es un numero entero entre una cantidad minima y maxima de donas. 
+ * Post: devuelve la cantidad de puntos segun la cantidad de donas.
+ */
+int calcular_puntos_donas(int cantidad_donas) {
+  int puntos = 0;
+
+  if (cantidad_donas == 0) {
+    puntos = PUNTOS_0_DONAS;
+  } else if (cantidad_donas <= 3) {
+    puntos = PUNTOS_3_DONAS;
+  } else if (cantidad_donas <= 6) {
+    puntos = PUNTOS_6_DONAS;
+  } else if (cantidad_donas <= 9) {
+    puntos = PUNTOS_9_DONAS;
+  } else if (cantidad_donas <= CANTIDAD_DONAS_MAXIMA) {
+    puntos = PUNTOS_MAX_DONAS;
+  }
+
+  return puntos;
+}
+
+/*
  * Pre: -
  * Post: agrega una cantidad de puntos especifica segun la cantidad de donas que
  * ingrese el usuario.
  */
 void preguntar_sacrificio_donas(int *puntaje) {
-  int respuesta = -1;
-  int puntos = 0;
+  int cantidad_donas = CANTIDAD_DONAS_MINIMA - 1;
 
   printf("¿Cuántas donas estaría dispuesto a sacrificar para el Número Uno?\n");
 
-  while (respuesta < CANTIDAD_DONAS_MINIMA || respuesta > CANTIDAD_DONAS_MAXIMA) {
+  while (cantidad_donas < CANTIDAD_DONAS_MINIMA || cantidad_donas > CANTIDAD_DONAS_MAXIMA) {
     printf("Ingrese su respuesta: ");
-    scanf("%i", &respuesta);
+    scanf("%i", &cantidad_donas);
 
-    if (respuesta < CANTIDAD_DONAS_MINIMA || respuesta > CANTIDAD_DONAS_MAXIMA) {
-      printf(
-          "Respuesta inválida. Por favor, ingrese un número válido (0-12).\n");
+    if (cantidad_donas < CANTIDAD_DONAS_MINIMA || cantidad_donas > CANTIDAD_DONAS_MAXIMA) {
+      printf("Respuesta inválida. Por favor, ingrese un número válido (%d-%d).\n", CANTIDAD_DONAS_MINIMA, CANTIDAD_DONAS_MAXIMA);
     }
   }
 
-  if (respuesta == 0) {
-    puntos = PUNTOS_0_DONAS;
-  } else if (respuesta <= 3) {
-    puntos = PUNTOS_3_DONAS;
-  } else if (respuesta <= 6) {
-    puntos = PUNTOS_6_DONAS;
-  } else if (respuesta <= 9) {
-    puntos = PUNTOS_9_DONAS;
-  } else if (respuesta <= CANTIDAD_DONAS_MAXIMA) {
-    puntos = PUNTOS_MAX_DONAS;
-  }
-
-  *puntaje = puntos;
+  *puntaje = calcular_puntos_donas(cantidad_donas);
 }
 
 /*
