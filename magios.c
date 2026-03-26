@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+const int CANTIDAD_PREGUNTAS = 4;
+
 const char JEBEDIAH = 'J';
 const char ALIEN = 'A';
 const char MAGIOS = 'S';
@@ -17,11 +19,13 @@ const char NO = 'N';
 const int PUNTOS_PROMESA_SECRETA_SI = 50;
 const int PUNTOS_PROMESA_SECRETA_NO = -300;
 
+const int CANTIDAD_DONAS_MINIMA = 0;
+const int CANTIDAD_DONAS_MAXIMA = 12;
 const int PUNTOS_0_DONAS = -100;
 const int PUNTOS_3_DONAS = 10;
 const int PUNTOS_6_DONAS = 40;
 const int PUNTOS_9_DONAS = 70;
-const int PUNTOS_12_DONAS = 120;
+const int PUNTOS_MAX_DONAS = 120;
 
 const int PUNTOS_RECHAZADO = 0;
 const int PUNTOS_ASPIRANTE = 150;
@@ -218,11 +222,11 @@ void preguntar_sacrificio_donas(int *puntaje) {
 
   printf("¿Cuántas donas estaría dispuesto a sacrificar para el Número Uno?\n");
 
-  while (respuesta < 0 || respuesta > 12) {
+  while (respuesta < CANTIDAD_DONAS_MINIMA || respuesta > CANTIDAD_DONAS_MAXIMA) {
     printf("Ingrese su respuesta: ");
     scanf("%i", &respuesta);
 
-    if (respuesta < 0 || respuesta > 12) {
+    if (respuesta < CANTIDAD_DONAS_MINIMA || respuesta > CANTIDAD_DONAS_MAXIMA) {
       printf(
           "Respuesta inválida. Por favor, ingrese un número válido (0-12).\n");
     }
@@ -236,21 +240,21 @@ void preguntar_sacrificio_donas(int *puntaje) {
     puntos = PUNTOS_6_DONAS;
   } else if (respuesta <= 9) {
     puntos = PUNTOS_9_DONAS;
-  } else if (respuesta <= 12) {
-    puntos = PUNTOS_12_DONAS;
+  } else if (respuesta <= CANTIDAD_DONAS_MAXIMA) {
+    puntos = PUNTOS_MAX_DONAS;
   }
 
   *puntaje = puntos;
 }
 
 /*
- * Pre: la variable puntajes tiene 4 elementos.
- * Post: devuelve la suma de los 4 items de la variable puntajes.
+ * Pre: la variable puntajes tiene tantos elementos como cantidad de preguntas.
+ * Post: devuelve la suma de los items de la variable puntajes.
  */
-int calcular_puntaje_total(int puntajes[4]) {
+int calcular_puntaje_total(int puntajes[CANTIDAD_PREGUNTAS]) {
   int puntaje = 0;
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < CANTIDAD_PREGUNTAS; i++) {
     puntaje += puntajes[i];
   }
 
@@ -261,7 +265,7 @@ int calcular_puntaje_total(int puntajes[4]) {
  * Pre: -
  * Post: imprime el estado segun la cantidad de puntos obtenida.
  */
-void dar_resultado(int puntajes[4]) {
+void dar_resultado(int puntajes[CANTIDAD_PREGUNTAS]) {
   int puntaje_total = calcular_puntaje_total(puntajes);
 
   if (puntaje_total < PUNTOS_RECHAZADO) {
@@ -278,7 +282,7 @@ void dar_resultado(int puntajes[4]) {
 }
 
 int main() {
-  int puntajes[4] = {0, 0, 0, 0};
+  int puntajes[CANTIDAD_PREGUNTAS];
   bool terminar_programa = false;
   preguntar_fundador(&puntajes[0], &terminar_programa);
   if (terminar_programa) {
